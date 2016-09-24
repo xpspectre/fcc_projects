@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Wikipedia Viewer</title>
+    <link rel='stylesheet prefetch'
+          href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css'>
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <h1 class="text-center">Wikipedia Viewer</h1>
+        </div>
+    </div>
+    <div class="row text-center">
+        <button id="random-button" class="btn btn-primary">Random Article</button>
+    </div>
+    <div class="row text-center">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <input type="text" class="form-control" id="search-entry">
+            </div>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+    <div class="row text-center">
+        <button id="search-button" class="btn btn-primary">Search</button>
+    </div>
+    <div class="row text-center" id="search-results">
+        <!-- To be filled in by search -->
+        <!-- Ugly, but works! -->
+        <h2 id="search-heading"></h2>
+        <ul id="search-list"></ul>
+    </div>
+</div>
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js'></script>
+<script src="js/index.js"></script>
+</body>
+</html>
