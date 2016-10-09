@@ -1,0 +1,17 @@
+#fixed-width {
+    width:100px;
+}
+
+.btn-one {
+    width: 35px !important;
+}
+
+.btn-two {
+    width: 74px !important;
+}
+
+@media (min-width: 250px) {
+    .container {
+        width: 200px;
+    }
+}
