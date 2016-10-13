@@ -1,17 +1,36 @@
 // Tic-tac-toe game logic and AI
+// See http://neverstopbuilding.com/minimax
 // Build a command line version for debugging
 
 // Board is a 3x3 array
 // 1st player is x, 2nd is o
+// If a player is about to lose, they pick the 1st choice starting from upper left
 
-var b = [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']];
+function copyArrArr(a) {
+    // Copy array of arrays by value
+    var b = [];
+    for (var i = 0; i < a.length; i++)
+        b[i] = a[i].slice();
+    return b;
+}
+
+function maxInd(a) {
+    // Get index of max of array
+    return a.indexOf(Math.max.apply(Math, a));
+}
+
+function minInd(a) {
+    // Get index of min of array
+    return a.indexOf(Math.min.apply(Math, a));
+}
 
 function randBoard() {
     // Make random board
     var b = [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']];
     for (var i = 0; i < 3; i++) {
         for (var j = 0; j < 3; j++) {
-            b[i][j] = 'xo '.charAt(Math.floor(Math.random() * 3));
+            // b[i][j] = 'xo '.charAt(Math.floor(Math.random() * 3));
+            b[i][j] = 'xo    '.charAt(Math.floor(Math.random() * 6));
         }
     }
     return b;
@@ -40,16 +59,32 @@ function possibleMoves(b) {
     return moves;
 }
 
-function allSame(a) {
-    // Returns whether all elements in an array are the same
+function allSameFilled(a) {
+    // Returns whether all elements in an array are the same 'x' or 'o'
     var a0 = a[0];
+    if (a0 === ' ') {
+        return false;
+    }
     return a.every(function(e,i,a) {
         return e === a0;
     });
 }
 
+function allFilled(b) {
+    // Returns whether the entire 3x3 board is filled
+    for (var i = 0; i < 3; i++) {
+        for (var j = 0; j < 3; j++) {
+            if (b[i][j] === ' ') {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 function isWinner(b) {
-    // Returns whether a board has a winning placement, returning 'x' or 'o' for winner, or ' ' for no winner.
+    // Returns whether a board has a winning placement, returning 'x' or 'o' for winner, 'd' for whole board filled and
+    //  draw, or ' ' blank for no winner and not finished
     // There are 8 ways to win: 3 rows, 3 cols, and 2 diags
 
     // Check rows and cols
@@ -60,8 +95,8 @@ function isWinner(b) {
             row.push(b[i][j]);
             col.push(b[j][i]);
         }
-        if (allSame(row) || allSame(col)) {
-            return row[i];
+        if (allSameFilled(row) || allSameFilled(col)) {
+            return row[i]; // shared by row and col
         }
     }
 
@@ -72,20 +107,160 @@ function isWinner(b) {
         d1.push(b[i][i]);
         d2.push(b[i][2-i]);
     }
-    if (allSame(d1) || allSame(d2)) {
-        return d1[1];
+    if (allSameFilled(d1) || allSameFilled(d2)) {
+        return d1[1]; // shared by d1 and d2
     }
 
     // Fell thru, no winner
-    return ' ';
+    // Check if incomplete or draw
+    if (allFilled(b)) {
+        return 'd';
+    } else {
+        return ' ';
+    }
 }
 
-function score(b) {
-    // Returns score
+function getMoves(game) {
+    // Given some state b, return an array of boards containing all of p's next moves
+    var pos = possibleMoves(game.b);
+    var moves = [];
+    for (var i = 0; i < pos.length; i++) {
+        var move = advanceGame(game);
+        move.b[pos[i][0]][pos[i][1]] = game.p;
+        moves.push(move);
+    }
+    return moves;
 }
 
-var b1 = randBoard();
-console.log(printBoard(b1));
-console.log(possibleMoves(b1));
-console.log(isWinner(b1));
-1
+function getScore(b, depth) {
+    // Returns score, where player winning is +10, player losing is -10, no winner is 0
+    var winner = isWinner(b);
+    switch (winner) {
+        case player:
+            return 10 - depth;
+            break;
+        case opponent:
+            return depth - 10;
+            break;
+        default:
+            return 0;
+            break;
+    }
+}
+
+function minimax(game, depth) {
+    // Main AI algorithm
+    // Return if game is over
+    var winner = isWinner(game.b);
+    if (winner !== ' ') {
+        return getScore(game.b, depth);
+    }
+
+    // Calculate possible moves and minimax scores
+    depth++;
+    var choices = possibleMoves(game.b);
+    var moves = getMoves(game);
+    var scores = [];
+    for (var i = 0; i < moves.length; i++) {
+        scores.push(minimax(moves[i], depth));
+    }
+
+    // Do min/max calculation
+    var ind;
+    switch (game.p) {
+        case player:
+            ind = maxInd(scores);
+            break;
+        case opponent:
+            ind = minInd(scores);
+            break;
+    }
+    choice = choices[ind];
+    return scores[ind];
+}
+
+function switchPlayer() {
+    switch (player) {
+        case 'x':
+            player = 'o';
+            opponent = 'x';
+            break;
+        case 'o':
+            player = 'x';
+            opponent = 'o';
+            break;
+    }
+}
+
+function advanceGame(game) {
+    var b_ = copyArrArr(game.b);
+    var p_;
+    switch (game.p) {
+        case 'x':
+            p_ = 'o';
+            break;
+        case 'o':
+            p_ = 'x';
+            break;
+    }
+    return ({b: b_, p: p_ })
+}
+
+function play(game) {
+    while (true) {
+        var winner = isWinner(game.b);
+        switch (winner) {
+            case 'x':
+            case 'o':
+                console.log('Player ' + winner + ' won with:');
+                console.log(printBoard(game.b));
+                return;
+            case 'd':
+                console.log('It was a draw with:');
+                console.log(printBoard(game.b));
+                return;
+        }
+        // not done yet, keep going
+
+        minimax(game, 0);
+
+        console.log('Player ' + player + ' should choose ' + choice);
+        game.b[choice[0]][choice[1]] = player;
+        console.log(printBoard(game.b));
+
+        switchPlayer(game);
+        game = advanceGame(game);
+    }
+
+}
+
+var b0 = [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']]; // empty starting board
+var b1 = randBoard(); // random testing board
+var b2 = [['o', ' ', 'x'], ['x', ' ', ' '], ['x', 'o', 'o']];
+var b3 = [[' ', ' ', ' '], ['x', 'x', 'x'], [' ', 'x', 'o']];
+var b4 = [['x', ' ', ' '], ['x', 'o', 'o'], ['x', 'o', 'o']];
+var b5 = [['x', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']];
+var b6 = [[' ', 'x', ' '], [' ', ' ', 'x'], ['o', 'o', 'x']];
+
+bx = b1;
+
+// console.log(printBoard(b1));
+// console.log(possibleMoves(b1));
+console.log(isWinner(bx));
+// var nextMoves = getMoves(b1, 'x');
+// for (var i = 0; i < nextMoves.length; i++) {
+//     console.log(printBoard(nextMoves[i]));
+// }
+
+// Play test game
+var game = {
+    b: bx,
+    p: 'x'
+};
+var player = 'x';
+var opponent = 'o';
+// var player = 'o';
+// var opponent = 'x';
+var choice; // coordinates of best move
+console.log(printBoard(game.b));
+play(game);
