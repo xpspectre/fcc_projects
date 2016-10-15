@@ -121,7 +121,7 @@ function isWinner(b) {
 }
 
 function getMoves(game) {
-    // Given some state b, return an array of boards containing all of p's next moves
+    // Given some state b, return an array of game states/next moves containing all of p's next moves
     var pos = possibleMoves(game.b);
     var moves = [];
     for (var i = 0; i < pos.length; i++) {
@@ -180,6 +180,7 @@ function minimax(game, depth) {
 }
 
 function switchPlayer() {
+    // Switch global player at end of turn
     switch (player) {
         case 'x':
             player = 'o';
@@ -193,6 +194,7 @@ function switchPlayer() {
 }
 
 function advanceGame(game) {
+    // Make new game board at end of turn
     var b_ = copyArrArr(game.b);
     var p_;
     switch (game.p) {
@@ -234,33 +236,46 @@ function play(game) {
 
 }
 
-var b0 = [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']]; // empty starting board
-var b1 = randBoard(); // random testing board
-var b2 = [['o', ' ', 'x'], ['x', ' ', ' '], ['x', 'o', 'o']];
-var b3 = [[' ', ' ', ' '], ['x', 'x', 'x'], [' ', 'x', 'o']];
-var b4 = [['x', ' ', ' '], ['x', 'o', 'o'], ['x', 'o', 'o']];
-var b5 = [['x', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']];
-var b6 = [[' ', 'x', ' '], [' ', ' ', 'x'], ['o', 'o', 'x']];
+// Export functions for testing in node
+if(typeof exports !== 'undefined') {
+    exports.maxInd = maxInd;
+    exports.minInd = minInd;
+    exports.copyArrArr = copyArrArr;
+    exports.randBoard = randBoard;
+    exports.possibleMoves = possibleMoves;
+    exports.allSameFilled = allSameFilled;
+    exports.allFilled = allFilled;
+    exports.isWinner = isWinner;
+    exports.getMoves = getMoves;
+}
 
-bx = b1;
-
-// console.log(printBoard(b1));
-// console.log(possibleMoves(b1));
-console.log(isWinner(bx));
-// var nextMoves = getMoves(b1, 'x');
-// for (var i = 0; i < nextMoves.length; i++) {
-//     console.log(printBoard(nextMoves[i]));
-// }
-
-// Play test game
-var game = {
-    b: bx,
-    p: 'x'
-};
-var player = 'x';
-var opponent = 'o';
-// var player = 'o';
-// var opponent = 'x';
-var choice; // coordinates of best move
-console.log(printBoard(game.b));
-play(game);
+// var b0 = [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']]; // empty starting board
+// var b1 = randBoard(); // random testing board
+// var b2 = [['o', ' ', 'x'], ['x', ' ', ' '], ['x', 'o', 'o']];
+// var b3 = [[' ', ' ', ' '], ['x', 'x', 'x'], [' ', 'x', 'o']];
+// var b4 = [['x', ' ', ' '], ['x', 'o', 'o'], ['x', 'o', 'o']];
+// var b5 = [['x', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']];
+// var b6 = [[' ', 'x', ' '], [' ', ' ', 'x'], ['o', 'o', 'x']];
+//
+// bx = b1;
+//
+// // console.log(printBoard(b1));
+// // console.log(possibleMoves(b1));
+// console.log(isWinner(bx));
+// // var nextMoves = getMoves(b1, 'x');
+// // for (var i = 0; i < nextMoves.length; i++) {
+// //     console.log(printBoard(nextMoves[i]));
+// // }
+//
+// // Play test game
+// var game = {
+//     b: bx,
+//     p: 'x'
+// };
+// var player = 'x';
+// var opponent = 'o';
+// // var player = 'o';
+// // var opponent = 'x';
+// var choice; // coordinates of best move
+// console.log(printBoard(game.b));
+// play(game);
