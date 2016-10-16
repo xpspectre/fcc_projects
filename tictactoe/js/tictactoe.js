@@ -241,41 +241,16 @@ if(typeof exports !== 'undefined') {
     exports.maxInd = maxInd;
     exports.minInd = minInd;
     exports.copyArrArr = copyArrArr;
+    exports.printBoard = printBoard;
     exports.randBoard = randBoard;
     exports.possibleMoves = possibleMoves;
     exports.allSameFilled = allSameFilled;
     exports.allFilled = allFilled;
     exports.isWinner = isWinner;
     exports.getMoves = getMoves;
+    exports.play = play;
+    exports.getScore = getScore;
+    exports.minimax = minimax; // last turn integration testing is fast
+    exports.switchPlayer = switchPlayer;
+    exports.advanceGame = advanceGame;
 }
-
-// var b0 = [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']]; // empty starting board
-// var b1 = randBoard(); // random testing board
-// var b2 = [['o', ' ', 'x'], ['x', ' ', ' '], ['x', 'o', 'o']];
-// var b3 = [[' ', ' ', ' '], ['x', 'x', 'x'], [' ', 'x', 'o']];
-// var b4 = [['x', ' ', ' '], ['x', 'o', 'o'], ['x', 'o', 'o']];
-// var b5 = [['x', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']];
-// var b6 = [[' ', 'x', ' '], [' ', ' ', 'x'], ['o', 'o', 'x']];
-//
-// bx = b1;
-//
-// // console.log(printBoard(b1));
-// // console.log(possibleMoves(b1));
-// console.log(isWinner(bx));
-// // var nextMoves = getMoves(b1, 'x');
-// // for (var i = 0; i < nextMoves.length; i++) {
-// //     console.log(printBoard(nextMoves[i]));
-// // }
-//
-// // Play test game
-// var game = {
-//     b: bx,
-//     p: 'x'
-// };
-// var player = 'x';
-// var opponent = 'o';
-// // var player = 'o';
-// // var opponent = 'x';
-// var choice; // coordinates of best move
-// console.log(printBoard(game.b));
-// play(game);

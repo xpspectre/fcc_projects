@@ -1,6 +1,12 @@
 var assert = require('chai').assert;
 var ttt = require('../js/tictactoe');
 
+// Required global vars
+// Make call setup to set these before tests that need them
+player = 'x';
+opponent = 'o';
+choice = [];
+
 function testBoard(b) {
     // Whether b is a valid tic-tac-toe board
     // Returns 0 if valid, else
@@ -59,6 +65,13 @@ suite('Util', function() {
                 }
             }
 
+        });
+    });
+
+    suite('printBoard()', function() {
+        test('should return a string', function () {
+            var b = [['x', 'x', 'x'], ['x', 'x', 'x'], [' ', 'x', 'x']];
+            assert.isString(ttt.printBoard(b));
         });
     });
 
@@ -176,4 +189,167 @@ suite('Util', function() {
         });
     });
 
+    suite('getMoves()', function() {
+        test("should return o's last valid move", function () {
+            // Make current game state
+            var b = [['x', 'o', 'x'], ['x', 'o', 'o'], ['o', 'x', ' ']];
+            var game = {
+                b: b,
+                p: 'x'
+            };
+
+            // Check out possible next game states. Current player moves; next player's turn.
+            var moves = ttt.getMoves(game);
+            assert.isArray(moves);
+            assert.equal(moves.length, 1);
+            assert.equal(moves[0].p, 'o');
+            assert.deepEqual(moves[0].b, [['x', 'o', 'x'], ['x', 'o', 'o'], ['o', 'x', 'x']]);
+        });
+
+        test("should return x's last valid move", function () {
+            // Make current game state
+            var b = [['x', 'o', 'x'], ['x', 'o', 'o'], ['o', 'x', ' ']];
+            var game = {
+                b: b,
+                p: 'o'
+            };
+
+            // Check out possible next game states. Current player moves; next player's turn.
+            var moves = ttt.getMoves(game);
+            assert.isArray(moves);
+            assert.equal(moves.length, 1);
+            assert.equal(moves[0].p, 'x');
+            assert.deepEqual(moves[0].b, [['x', 'o', 'x'], ['x', 'o', 'o'], ['o', 'x', 'o']]);
+        });
+
+        test("should return o's last 2 valid moves", function () {
+            // Make current game state
+            var b = [['x', 'o', 'x'], ['x', 'o', 'o'], ['o', ' ', ' ']];
+            var game = {
+                b: b,
+                p: 'x'
+            };
+
+            // Check out possible next game states. Current player moves; next player's turn.
+            var moves = ttt.getMoves(game);
+            assert.isArray(moves);
+            assert.equal(moves.length, 2);
+            assert.equal(moves[0].p, 'o');
+            assert.equal(moves[1].p, 'o');
+
+            var bExpect = [[['x', 'o', 'x'], ['x', 'o', 'o'], ['o', 'x', ' ']],[['x', 'o', 'x'], ['x', 'o', 'o'], ['o', ' ', 'x']]].sort();
+            var bActual = [moves[0].b, moves[1].b].sort();
+            assert.deepEqual(bActual, bExpect);
+        });
+    });
+
+    suite('getScore()', function() {
+        // Player is x
+        setup(function() {
+            player = 'x';
+            opponent = 'o';
+        });
+
+        test('should return +10 for player win, depth 0', function () {
+            var depth = 0;
+            var b = [['x', 'x', 'x'], [' ', ' ', ' '], [' ', ' ', ' ']];
+            assert.equal(ttt.getScore(b, depth), 10);
+        });
+
+        test('should return -10 for player loss, depth 0', function () {
+            var depth = 0;
+            var b = [['o', 'o', 'o'], [' ', ' ', ' '], [' ', ' ', ' ']];
+            assert.equal(ttt.getScore(b, depth), -10);
+        });
+
+        test('should return 0 for incomplete', function () {
+            var depth = 0;
+            var b = [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']];
+            assert.equal(ttt.getScore(b, depth), 0);
+        });
+
+        test('should return 0 for tie', function () {
+            var depth = 0;
+            var b = [['x', 'o', 'x'], ['x', 'o', 'o'], ['o', 'x', 'x']];
+            assert.equal(ttt.getScore(b, depth), 0);
+        });
+
+        test('should return +8 for player win, depth 2', function () {
+            var depth = 2;
+            var b = [['x', 'x', 'x'], [' ', ' ', ' '], [' ', ' ', ' ']];
+            assert.equal(ttt.getScore(b, depth), 8);
+        });
+    });
+
+    suite('minimax()', function() {
+        setup(function() {
+            player = 'x';
+            opponent = 'o';
+            choice = [];
+        });
+
+        test('should return return score +10 for x won', function () {
+            var b = [['x', 'x', 'x'], ['o', 'o', ' '], [' ', ' ', ' ']];
+            var game = {
+                b: b,
+                p: 'x'
+            };
+            var depth = 0;
+            assert.equal(ttt.minimax(game, depth), 10);
+        });
+
+        test('should return return score +9 for x one move away from winning', function () {
+            var b = [['x', 'x', ' '], ['o', 'o', ' '], [' ', ' ', ' ']];
+            var game = {
+                b: b,
+                p: 'x'
+            };
+            var depth = 0;
+            assert.equal(ttt.minimax(game, depth), 9);
+        });
+    });
+
+    suite('switchPlayer()', function() {
+        test('should swap player x and opponent o', function () {
+            player = 'x';
+            opponent = 'o';
+            ttt.switchPlayer();
+            assert.equal(player, 'o');
+            assert.equal(opponent, 'x');
+        });
+
+        test('should swap player o and opponent x', function () {
+            player = 'o';
+            opponent = 'x';
+            ttt.switchPlayer();
+            assert.equal(player, 'x');
+            assert.equal(opponent, 'o');
+        });
+    });
+
+    suite('advanceGame()', function() {
+        test('should make a copy of the board and change player from x', function () {
+            var b = [['x', 'x', ' '], ['o', 'o', ' '], [' ', ' ', ' ']];
+            var game = {
+                b: b,
+                p: 'x'
+            };
+            var game2 = ttt.advanceGame(game);
+            assert.notEqual(game.b, game2.b);
+            assert.deepEqual(game.b, game2.b);
+            assert.equal(game2.p, 'o');
+        });
+
+        test('should make a copy of the board and change player from o', function () {
+            var b = [['x', ' ', ' '], ['o', 'o', ' '], ['x', ' ', ' ']];
+            var game = {
+                b: b,
+                p: 'o'
+            };
+            var game2 = ttt.advanceGame(game);
+            assert.notEqual(game.b, game2.b);
+            assert.deepEqual(game.b, game2.b);
+            assert.equal(game2.p, 'x');
+        });
+    });
 });
