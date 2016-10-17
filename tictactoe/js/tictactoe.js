@@ -208,34 +208,6 @@ function advanceGame(game) {
     return ({b: b_, p: p_ })
 }
 
-function play(game) {
-    while (true) {
-        var winner = isWinner(game.b);
-        switch (winner) {
-            case 'x':
-            case 'o':
-                console.log('Player ' + winner + ' won with:');
-                console.log(printBoard(game.b));
-                return;
-            case 'd':
-                console.log('It was a draw with:');
-                console.log(printBoard(game.b));
-                return;
-        }
-        // not done yet, keep going
-
-        minimax(game, 0);
-
-        console.log('Player ' + player + ' should choose ' + choice);
-        game.b[choice[0]][choice[1]] = player;
-        console.log(printBoard(game.b));
-
-        switchPlayer(game);
-        game = advanceGame(game);
-    }
-
-}
-
 // Export functions for testing in node
 if(typeof exports !== 'undefined') {
     exports.maxInd = maxInd;
@@ -248,7 +220,6 @@ if(typeof exports !== 'undefined') {
     exports.allFilled = allFilled;
     exports.isWinner = isWinner;
     exports.getMoves = getMoves;
-    exports.play = play;
     exports.getScore = getScore;
     exports.minimax = minimax; // last turn integration testing is fast
     exports.switchPlayer = switchPlayer;

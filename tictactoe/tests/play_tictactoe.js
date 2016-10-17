@@ -1,4 +1,33 @@
 var ttt = require('../js/tictactoe');
+var printBoard = ttt.printBoard;
+
+function play(game) {
+    while (true) {
+        var winner = ttt.isWinner(game.b);
+        switch (winner) {
+            case 'x':
+            case 'o':
+                console.log('Player ' + winner + ' won with:');
+                console.log(printBoard(game.b));
+                return;
+            case 'd':
+                console.log('It was a draw with:');
+                console.log(printBoard(game.b));
+                return;
+        }
+        // not done yet, keep going
+
+        ttt.minimax(game, 0);
+
+        console.log('Player ' + player + ' should choose ' + choice);
+        game.b[choice[0]][choice[1]] = player;
+        console.log(printBoard(game.b));
+
+        ttt.switchPlayer(game);
+        game = ttt.advanceGame(game);
+    }
+
+}
 
 var b0 = [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']]; // empty starting board
 var b1 = ttt.randBoard(); // random testing board
@@ -24,5 +53,5 @@ opponent = 'o';
 // opponent = 'x';
 choice = []; // coordinates of best move
 
-console.log(ttt.printBoard(game.b));
-ttt.play(game);
+console.log(printBoard(game.b));
+play(game);
