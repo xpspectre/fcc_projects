@@ -1,8 +1,5 @@
-var assert = require('chai').assert;
-var ttt = require('../js/tictactoe');
+var assert = chai.assert;
 
-// Required global vars
-// Make call setup to set these before tests that need them
 player = 'x';
 opponent = 'o';
 choice = [];
@@ -40,20 +37,20 @@ function testBoard(b) {
 suite('Util', function() {
     suite('maxInd()', function() {
         test('should return index of max value', function () {
-            assert.equal(1, ttt.maxInd([1,3,2]))
+            assert.equal(1, maxInd([1,3,2]))
         });
     });
 
     suite('minInd()', function() {
         test('should return index of min value', function () {
-            assert.equal(0, ttt.minInd([1,3,2]))
+            assert.equal(0, minInd([1,3,2]))
         });
     });
 
     suite('copyArrArr()', function() {
         test('should return separate copy of array of arrays', function () {
             var x = [[1,2],[3,4]];
-            var y = ttt.copyArrArr(x);
+            var y = copyArrArr(x);
 
             // References are different
             assert.notEqual(x, y);
@@ -64,27 +61,26 @@ suite('Util', function() {
                     assert.equal(x[i][j], y[i][j]);
                 }
             }
-
         });
     });
 
     suite('printBoard()', function() {
         test('should return a string', function () {
             var b = [['x', 'x', 'x'], ['x', 'x', 'x'], [' ', 'x', 'x']];
-            assert.isString(ttt.printBoard(b));
+            assert.isString(printBoard(b));
         });
     });
 
     suite('randBoard()', function() {
         test('should return a valid board', function () {
-            assert.equal(testBoard(ttt.randBoard()), 0);
+            assert.equal(testBoard(randBoard()), 0);
         });
     });
 
     suite('possibleMoves()', function() {
         test('should return the 1 possible move', function () {
             var b = [['x', 'x', 'x'], ['x', 'x', 'x'], [' ', 'x', 'x']];
-            var moves = ttt.possibleMoves(b);
+            var moves = possibleMoves(b);
             assert.isArray(moves);
             assert.equal(moves.length, 1);
             assert.deepEqual(moves, [[2,0]]); // list of lists
@@ -92,7 +88,7 @@ suite('Util', function() {
 
         test('should return the 2 possible moves', function () {
             var b = [['x', 'x', 'x'], ['x', ' ', 'x'], [' ', 'x', 'x']];
-            var moves = ttt.possibleMoves(b);
+            var moves = possibleMoves(b);
             assert.isArray(moves);
             assert.equal(moves.length, 2);
             assert.deepEqual(moves.sort(), [[1,1], [2,0]].sort()); // don't care about the order
@@ -100,7 +96,7 @@ suite('Util', function() {
 
         test('should return the 0 possible moves', function () {
             var b = [['x', 'x', 'x'], ['x', 'x', 'x'], ['x', 'x', 'x']];
-            var moves = ttt.possibleMoves(b);
+            var moves = possibleMoves(b);
             assert.isArray(moves);
             assert.equal(moves.length, 0);
         });
@@ -109,23 +105,23 @@ suite('Util', function() {
     suite('allSameFilled()', function() {
         // This function has a dumb bug the 1st time I wrote it
         test("should return true for ['x','x','x']", function () {
-            assert.isTrue(ttt.allSameFilled(['x','x','x']));
+            assert.isTrue(allSameFilled(['x','x','x']));
         });
 
         test("should return true for ['o','o','o']", function () {
-            assert.isTrue(ttt.allSameFilled(['o','o','o']));
+            assert.isTrue(allSameFilled(['o','o','o']));
         });
 
         test("should return false for ['x','x',' ']", function () {
-            assert.isFalse(ttt.allSameFilled(['x','x',' ']));
+            assert.isFalse(allSameFilled(['x','x',' ']));
         });
 
         test("should return false for [' ','x','x']", function () {
-            assert.isFalse(ttt.allSameFilled([' ','x','x']));
+            assert.isFalse(allSameFilled([' ','x','x']));
         });
 
         test("should return false for [' ',' ',' ']", function () {
-            assert.isFalse(ttt.allSameFilled([' ',' ',' ']));
+            assert.isFalse(allSameFilled([' ',' ',' ']));
         });
 
     });
@@ -133,59 +129,59 @@ suite('Util', function() {
     suite('allFilled()', function() {
         test('should return true for a fully filled board of x', function () {
             var b = [['x', 'x', 'x'], ['x', 'x', 'x'], ['x', 'x', 'x']];
-            assert.isTrue(ttt.allFilled(b));
+            assert.isTrue(allFilled(b));
         });
 
         test('should return true for a fully filled board of o', function () {
             var b = [['o', 'o', 'o'], ['o', 'o', 'o'], ['o', 'o', 'o']];
-            assert.isTrue(ttt.allFilled(b));
+            assert.isTrue(allFilled(b));
         });
 
         test('should return true for a fully filled board of mixed x and o', function () {
             var b = [['o', 'x', 'o'], ['x', 'o', 'x'], ['o', 'x', 'o']];
-            assert.isTrue(ttt.allFilled(b));
+            assert.isTrue(allFilled(b));
         });
 
         test('should return false for a board with blanks', function () {
             var b = [[' ', 'x', 'x'], ['x', 'x', 'x'], ['x', 'x', 'x']];
-            assert.isFalse(ttt.allFilled(b));
+            assert.isFalse(allFilled(b));
         });
     });
 
     suite('isWinner()', function() {
         test('should return blank for a blank board', function () {
             var b = [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']];
-            assert.equal(ttt.isWinner(b), ' ');
+            assert.equal(isWinner(b), ' ');
         });
 
         test('should return blank for no winner', function () {
             var b = [['x', ' ', 'x'], ['o', 'o', ' '], [' ', ' ', 'x']];
-            assert.equal(ttt.isWinner(b), ' ');
+            assert.equal(isWinner(b), ' ');
         });
 
         test('should return x for x winning a row', function () {
             var b =[['x', 'x', 'x'], [' ', ' ', ' '], [' ', ' ', ' ']];
-            assert.equal(ttt.isWinner(b), 'x');
+            assert.equal(isWinner(b), 'x');
         });
 
         test('should return x for x winning a col', function () {
             var b =[[' ', 'x', ' '], [' ', 'x', ' '], [' ', 'x', ' ']];
-            assert.equal(ttt.isWinner(b), 'x');
+            assert.equal(isWinner(b), 'x');
         });
 
         test('should return x for x winning a diag', function () {
             var b =[['x', ' ', ' '], [' ', 'x', ' '], [' ', ' ', 'x']];
-            assert.equal(ttt.isWinner(b), 'x');
+            assert.equal(isWinner(b), 'x');
         });
 
         test('should return o for o winning a row', function () {
             var b =[[' ', ' ', ' '], ['o', 'o', 'o'], [' ', ' ', ' ']];
-            assert.equal(ttt.isWinner(b), 'o');
+            assert.equal(isWinner(b), 'o');
         });
 
         test('should return d for a draw on a filled board', function () {
             var b = [['x', 'o', 'x'], ['x', 'o', 'o'], ['o', 'x', 'x']];
-            assert.equal(ttt.isWinner(b), 'd');
+            assert.equal(isWinner(b), 'd');
         });
     });
 
@@ -199,7 +195,7 @@ suite('Util', function() {
             };
 
             // Check out possible next game states. Current player moves; next player's turn.
-            var moves = ttt.getMoves(game);
+            var moves = getMoves(game);
             assert.isArray(moves);
             assert.equal(moves.length, 1);
             assert.equal(moves[0].p, 'o');
@@ -215,7 +211,7 @@ suite('Util', function() {
             };
 
             // Check out possible next game states. Current player moves; next player's turn.
-            var moves = ttt.getMoves(game);
+            var moves = getMoves(game);
             assert.isArray(moves);
             assert.equal(moves.length, 1);
             assert.equal(moves[0].p, 'x');
@@ -231,7 +227,7 @@ suite('Util', function() {
             };
 
             // Check out possible next game states. Current player moves; next player's turn.
-            var moves = ttt.getMoves(game);
+            var moves = getMoves(game);
             assert.isArray(moves);
             assert.equal(moves.length, 2);
             assert.equal(moves[0].p, 'o');
@@ -253,31 +249,31 @@ suite('Util', function() {
         test('should return +10 for player win, depth 0', function () {
             var depth = 0;
             var b = [['x', 'x', 'x'], [' ', ' ', ' '], [' ', ' ', ' ']];
-            assert.equal(ttt.getScore(b, depth), 10);
+            assert.equal(getScore(b, depth), 10);
         });
 
         test('should return -10 for player loss, depth 0', function () {
             var depth = 0;
             var b = [['o', 'o', 'o'], [' ', ' ', ' '], [' ', ' ', ' ']];
-            assert.equal(ttt.getScore(b, depth), -10);
+            assert.equal(getScore(b, depth), -10);
         });
 
         test('should return 0 for incomplete', function () {
             var depth = 0;
             var b = [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']];
-            assert.equal(ttt.getScore(b, depth), 0);
+            assert.equal(getScore(b, depth), 0);
         });
 
         test('should return 0 for tie', function () {
             var depth = 0;
             var b = [['x', 'o', 'x'], ['x', 'o', 'o'], ['o', 'x', 'x']];
-            assert.equal(ttt.getScore(b, depth), 0);
+            assert.equal(getScore(b, depth), 0);
         });
 
         test('should return +8 for player win, depth 2', function () {
             var depth = 2;
             var b = [['x', 'x', 'x'], [' ', ' ', ' '], [' ', ' ', ' ']];
-            assert.equal(ttt.getScore(b, depth), 8);
+            assert.equal(getScore(b, depth), 8);
         });
     });
 
@@ -295,7 +291,7 @@ suite('Util', function() {
                 p: 'x'
             };
             var depth = 0;
-            assert.equal(ttt.minimax(game, depth), 10);
+            assert.equal(minimax(game, depth), 10);
         });
 
         test('should return return score +9 for x one move away from winning', function () {
@@ -305,7 +301,7 @@ suite('Util', function() {
                 p: 'x'
             };
             var depth = 0;
-            assert.equal(ttt.minimax(game, depth), 9);
+            assert.equal(minimax(game, depth), 9);
         });
     });
 
@@ -313,7 +309,7 @@ suite('Util', function() {
         test('should swap player x and opponent o', function () {
             player = 'x';
             opponent = 'o';
-            ttt.switchPlayer();
+            switchPlayer();
             assert.equal(player, 'o');
             assert.equal(opponent, 'x');
         });
@@ -321,7 +317,7 @@ suite('Util', function() {
         test('should swap player o and opponent x', function () {
             player = 'o';
             opponent = 'x';
-            ttt.switchPlayer();
+            switchPlayer();
             assert.equal(player, 'x');
             assert.equal(opponent, 'o');
         });
@@ -334,7 +330,7 @@ suite('Util', function() {
                 b: b,
                 p: 'x'
             };
-            var game2 = ttt.advanceGame(game);
+            var game2 = advanceGame(game);
             assert.notEqual(game.b, game2.b);
             assert.deepEqual(game.b, game2.b);
             assert.equal(game2.p, 'o');
@@ -346,7 +342,7 @@ suite('Util', function() {
                 b: b,
                 p: 'o'
             };
-            var game2 = ttt.advanceGame(game);
+            var game2 = advanceGame(game);
             assert.notEqual(game.b, game2.b);
             assert.deepEqual(game.b, game2.b);
             assert.equal(game2.p, 'x');

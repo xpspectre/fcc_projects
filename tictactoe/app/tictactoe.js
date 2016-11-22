@@ -207,21 +207,3 @@ function advanceGame(game) {
     }
     return ({b: b_, p: p_ })
 }
-
-// Export functions for testing in node
-if(typeof exports !== 'undefined') {
-    exports.maxInd = maxInd;
-    exports.minInd = minInd;
-    exports.copyArrArr = copyArrArr;
-    exports.printBoard = printBoard;
-    exports.randBoard = randBoard;
-    exports.possibleMoves = possibleMoves;
-    exports.allSameFilled = allSameFilled;
-    exports.allFilled = allFilled;
-    exports.isWinner = isWinner;
-    exports.getMoves = getMoves;
-    exports.getScore = getScore;
-    exports.minimax = minimax; // last turn integration testing is fast
-    exports.switchPlayer = switchPlayer;
-    exports.advanceGame = advanceGame;
-}
