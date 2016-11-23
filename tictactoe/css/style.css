@@ -1,0 +1,18 @@
+#fixed-width {
+    width:100px;
+}
+
+.btn-one {
+    height: 35px !important;
+    width: 35px !important;
+}
+
+/*@media (min-width: 400px) {*/
+    /*.container {*/
+        /*width: 300px;*/
+    /*}*/
+/*}*/
+
+.board-row {
+    text-align: center;
+}
